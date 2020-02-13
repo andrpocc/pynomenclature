@@ -72,10 +72,34 @@ def map_50000(longitude_boundaries_100000: list, latitude_boundaries_100000: lis
             end_latitude -= 10 / 60
             j += 1
     latitude_boundaries = [end_latitude, end_latitude + 10/60]
-    position = letters_list_ru[j-1][i-1]
-    print(i,j,position, longitude_boundaries, latitude_boundaries)
+    position = letters_list_ru[j-1][i-1].upper()
+    return position, longitude_boundaries, latitude_boundaries
+
+
+def map_25000(longitude_boundaries_50000: list, latitude_boundaries_50000: list, longitude, latitude):
+    start_longitude = longitude_boundaries_50000[0]
+    end_longitude = longitude_boundaries_50000[1]
+    start_latitude = latitude_boundaries_50000[0]
+    end_latitude = latitude_boundaries_50000[1]
+    i, j = 0, 0
+    longitude_boundaries = list()
+    latitude_boundaries = list()
+    while start_longitude < longitude:
+        if start_longitude < longitude:
+            start_longitude += 7.5 / 60
+            i += 1
+    longitude_boundaries = [start_longitude - 7.5 / 60, start_longitude]
+    while end_latitude > latitude:
+        if end_latitude > latitude:
+            end_latitude -= 5 / 60
+            j += 1
+    latitude_boundaries = [end_latitude, end_latitude + 5 / 60]
+    position = letters_list_ru[j - 1][i - 1]
+    return position, longitude_boundaries, latitude_boundaries
 
 
 col, line, long_list, lat_list = map_1000000(long, lat)
 pos, long_list, lat_list = map_100000(long_list, lat_list, long, lat)
-map_50000(long_list, lat_list, long, lat)
+pos, long_list, lat_list = map_50000(long_list, lat_list, long, lat)
+print(pos)
+map_25000(long_list, lat_list, long, lat)
