@@ -1,10 +1,16 @@
 from geo_tasks import to_degrees
 
-long = to_degrees(45, 1, 26.1)
+long = to_degrees(45, 1,26.1)
 lat = to_degrees(41, 53, 4.7)
-letters_list_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
-                   'u', 'v']
-letters_list_ru = [['а', 'б'], ['в', 'г']]
+letters_list_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+                   'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v']
+
+letters_list_ru = [['а', 'б'],
+                   ['в', 'г']]
+
+letters_list_ru_up = [['А', 'Б'],
+                      ['В', 'Г']]
+
 
 def map_1000000(longitude, latitude):
     latitude_boundaries = list()
@@ -29,7 +35,7 @@ def map_1000000(longitude, latitude):
             latitude_boundaries = [map_latitude - 4, map_latitude]
     col = n
     line = letters_list_en[f-1]
-    return col, line, longitude_boundaries, latitude_boundaries
+    return str(col), line.upper(), longitude_boundaries, latitude_boundaries
 
 
 def map_100000(longitude_boundaries_1000000: list, latitude_boundaries_1000000: list, longitude, latitude):
@@ -50,8 +56,8 @@ def map_100000(longitude_boundaries_1000000: list, latitude_boundaries_1000000: 
             end_latitude -= 20/60
             j += 1
     latitude_boundaries = [end_latitude, end_latitude + 20/60]
-    position = j * 12 + i
-    return position, longitude_boundaries, latitude_boundaries
+    position = (j-1) * 12 + i
+    return str(position), longitude_boundaries, latitude_boundaries
 
 
 def map_50000(longitude_boundaries_100000: list, latitude_boundaries_100000: list, longitude, latitude):
@@ -72,7 +78,7 @@ def map_50000(longitude_boundaries_100000: list, latitude_boundaries_100000: lis
             end_latitude -= 10 / 60
             j += 1
     latitude_boundaries = [end_latitude, end_latitude + 10/60]
-    position = letters_list_ru[j-1][i-1].upper()
+    position = letters_list_ru_up[j-1][i-1]
     return position, longitude_boundaries, latitude_boundaries
 
 
@@ -99,7 +105,7 @@ def map_25000(longitude_boundaries_50000: list, latitude_boundaries_50000: list,
 
 
 col, line, long_list, lat_list = map_1000000(long, lat)
-pos, long_list, lat_list = map_100000(long_list, lat_list, long, lat)
-pos, long_list, lat_list = map_50000(long_list, lat_list, long, lat)
-print(pos)
-map_25000(long_list, lat_list, long, lat)
+pos1, long_list, lat_list = map_100000(long_list, lat_list, long, lat)
+pos2, long_list, lat_list = map_50000(long_list, lat_list, long, lat)
+pos3, long_list, lat_list = map_25000(long_list, lat_list, long, lat)
+print('{}-{}-{}-{}-{}'.format(line, col, pos1, pos2, pos3))
