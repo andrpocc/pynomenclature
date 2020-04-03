@@ -1,111 +1,22 @@
-from geo_tasks import to_degrees
-
-long = to_degrees(45, 1,26.1)
-lat = to_degrees(41, 53, 4.7)
-letters_list_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
-                   'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v']
-
-letters_list_ru = [['а', 'б'],
-                   ['в', 'г']]
-
-letters_list_ru_up = [['А', 'Б'],
-                      ['В', 'Г']]
-
-
-def map_1000000(longitude, latitude):
-    latitude_boundaries = list()
-    longitude_boundaries = list()
-    map_longitude = 0
-    n = 0
-    while map_longitude < longitude:
-        if map_longitude < longitude:
-            map_longitude += 6
-            n += 1
-            longitude_boundaries = [map_longitude - 6, map_longitude]
-    n += 30
-    if n > 60:
-        n -= 60
-
-    map_latitude = 0
-    f = 0
-    while map_latitude < latitude:
-        if map_latitude < latitude:
-            map_latitude += 4
-            f += 1
-            latitude_boundaries = [map_latitude - 4, map_latitude]
-    col = n
-    line = letters_list_en[f-1]
-    return str(col), line.upper(), longitude_boundaries, latitude_boundaries
-
-
-def map_100000(longitude_boundaries_1000000: list, latitude_boundaries_1000000: list, longitude, latitude):
-    start_longitude = longitude_boundaries_1000000[0]
-    end_longitude = longitude_boundaries_1000000[1]
-    start_latitude = latitude_boundaries_1000000[0]
-    end_latitude = latitude_boundaries_1000000[1]
-    i, j = 0, 0
-    longitude_boundaries = list()
-    latitude_boundaries = list()
-    while start_longitude < longitude:
-        if start_longitude < longitude:
-            start_longitude += 30/60
-            i += 1
-    longitude_boundaries = [start_longitude - 30/60, start_longitude]
-    while end_latitude > latitude:
-        if end_latitude > latitude:
-            end_latitude -= 20/60
-            j += 1
-    latitude_boundaries = [end_latitude, end_latitude + 20/60]
-    position = (j-1) * 12 + i
-    return str(position), longitude_boundaries, latitude_boundaries
-
-
-def map_50000(longitude_boundaries_100000: list, latitude_boundaries_100000: list, longitude, latitude):
-    start_longitude = longitude_boundaries_100000[0]
-    end_longitude = longitude_boundaries_100000[1]
-    start_latitude = latitude_boundaries_100000[0]
-    end_latitude = latitude_boundaries_100000[1]
-    i, j = 0, 0
-    longitude_boundaries = list()
-    latitude_boundaries = list()
-    while start_longitude < longitude:
-        if start_longitude < longitude:
-            start_longitude += 15 / 60
-            i += 1
-    longitude_boundaries = [start_longitude - 15 / 60, start_longitude]
-    while end_latitude > latitude:
-        if end_latitude > latitude:
-            end_latitude -= 10 / 60
-            j += 1
-    latitude_boundaries = [end_latitude, end_latitude + 10/60]
-    position = letters_list_ru_up[j-1][i-1]
-    return position, longitude_boundaries, latitude_boundaries
-
-
-def map_25000(longitude_boundaries_50000: list, latitude_boundaries_50000: list, longitude, latitude):
-    start_longitude = longitude_boundaries_50000[0]
-    end_longitude = longitude_boundaries_50000[1]
-    start_latitude = latitude_boundaries_50000[0]
-    end_latitude = latitude_boundaries_50000[1]
-    i, j = 0, 0
-    longitude_boundaries = list()
-    latitude_boundaries = list()
-    while start_longitude < longitude:
-        if start_longitude < longitude:
-            start_longitude += 7.5 / 60
-            i += 1
-    longitude_boundaries = [start_longitude - 7.5 / 60, start_longitude]
-    while end_latitude > latitude:
-        if end_latitude > latitude:
-            end_latitude -= 5 / 60
-            j += 1
-    latitude_boundaries = [end_latitude, end_latitude + 5 / 60]
-    position = letters_list_ru[j - 1][i - 1]
-    return position, longitude_boundaries, latitude_boundaries
-
+from nomenclature import *
+print('Введите широту:')
+lat = input().split(' ')
+lat = to_degrees(int(lat[0]), float(lat[1]), float(lat[2]))
+print('Введите долготу:')
+long = input().split()
+long = to_degrees(int(long[0]), float(long[1]), float(long[2]))
 
 col, line, long_list, lat_list = map_1000000(long, lat)
-pos1, long_list, lat_list = map_100000(long_list, lat_list, long, lat)
-pos2, long_list, lat_list = map_50000(long_list, lat_list, long, lat)
-pos3, long_list, lat_list = map_25000(long_list, lat_list, long, lat)
+pos1, long_list100, lat_list100 = map_100000(long_list, lat_list, long, lat)
+pos2, long_list50, lat_list50 = map_50000(long_list100, lat_list100, long, lat)
+pos3, long_list25, lat_list25 = map_25000(long_list50, lat_list50, long, lat)
+pos4, long_list, lat_list = map_5000(long_list100, lat_list100, long, lat)
+
+print('\n' * 2)
+print('Номенклатура карты 1:25000')
 print('{}-{}-{}-{}-{}'.format(line, col, pos1, pos2, pos3))
+print('\n')
+print('Номенклатура карты 1:5000')
+print('{}-{}-{}({})'.format(line, col, pos1, pos4))
+
+input()
