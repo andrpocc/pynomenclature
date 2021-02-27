@@ -1,6 +1,3 @@
-from geo_tasks import to_degrees
-
-
 letters_list_en = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
                    'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v']
 
@@ -9,6 +6,10 @@ letters_list_ru = [['а', 'б'],
 
 letters_list_ru_up = [['А', 'Б'],
                       ['В', 'Г']]
+
+
+def to_degrees(degrees: int, minutes: float, seconds: float = 0):
+    return degrees + minutes / 60 + seconds / 3600
 
 
 def map_1000000(longitude, latitude):
